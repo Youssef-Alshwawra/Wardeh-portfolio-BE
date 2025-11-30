@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { defineConfig } from 'drizzle-kit';
 
-const URL = process.env.DATABASE_URL;
+const URL = process.env.DB_URL;
 
 if(!URL) throw new Error('DATABASE URL env is required!');
 

@@ -1,4 +1,4 @@
-import db from "../config/db"
+import db from "../config/db.js"
 import { sectionTable } from "../db/schema.js"
 
 export const getAllSections = async (req, res) => {
