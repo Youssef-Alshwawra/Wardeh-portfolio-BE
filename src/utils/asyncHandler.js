@@ -3,3 +3,5 @@ const asyncHandler = (method) => {
         method(req, res, next).catch(next);
     }
 }
+
+export default asyncHandler;
