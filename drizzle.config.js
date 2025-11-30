@@ -3,9 +3,7 @@ import { defineConfig } from 'drizzle-kit';
 
 const URL = process.env.DATABASE_URL;
 
-if(!URL) {
-    throw new Error('DATABASE URL env is required!');
-}
+if(!URL) throw new Error('DATABASE URL env is required!');
 
 export default defineConfig({
     schema: './src/db/schema.js',
