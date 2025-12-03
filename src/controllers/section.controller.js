@@ -1,7 +1,4 @@
-import { eq } from "drizzle-orm";
-import db from "../config/db.js"
 import { sectionTable } from "../db/schema.js"
-import responseHandler from "../utils/responseHandler.js";
 import { getAll, getById, create, updateById, deleteById } from "../utils/curdFactory.js";
 
 // Using enhanced CRUD factory functions
