@@ -30,8 +30,6 @@ export const getById = (table, tableName = 'record', idColumn = 'id') => {
             if (!id || isNaN(Number(id))) {
                 return responseHandler(res, 400, false, 'Invalid or missing ID');
             }
-
-            // Use table parameter instead of hardcoded sectionTable
             const rows = await db.select()
                 .from(table)
                 .where(eq(table[idColumn], Number(id)))
