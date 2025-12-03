@@ -2,18 +2,15 @@ import { eq } from "drizzle-orm";
 import db from "../config/db.js"
 import { sectionTable } from "../db/schema.js"
 import responseHandler from "../utils/responseHandler.js";
-import { getAll, getById } from "../utils/curdFactory.js";
+import { getAll, getById, create, updateById, deleteById } from "../utils/curdFactory.js";
 
-// export const getAllSections = async (req, res) => {
-//     const sections = await db.select().from(sectionTable);
+// Using enhanced CRUD factory functions
+export const getAllSections = getAll(sectionTable, 'sections');
 
-//     if(sections.length <= 0) {
-//         return responseHandler(res, 200, 'There is no sections', null, false);
-//     }
+export const getSectionById = getById(sectionTable, 'section');
 
-//     return responseHandler(res, 200, 'Sections found successfully', sections);
-// }
+export const createSection = create(sectionTable, 'section');
 
-export const getAllSections = getAll(sectionTable);
+export const updateSection = updateById(sectionTable, 'section');
 
-export const getSectionById = getById(sectionTable);
+export const deleteSection = deleteById(sectionTable, 'section');
