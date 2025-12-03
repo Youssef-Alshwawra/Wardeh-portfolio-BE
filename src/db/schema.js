@@ -7,6 +7,11 @@ export const sectionTypeEnum = pgEnum('sectionTypeEnum', [
     'tools',
 ]);
 
+export const roleEnum = pgEnum('roleEnum', [
+    'admin',
+    'user',
+]);
+
 export const sectionTable = pgTable('sections', {
     id: uuid('id').primaryKey().defaultRandom(),
     sectionType: sectionTypeEnum('section_type').notNull(),
@@ -32,9 +37,10 @@ export const subSectionTable = pgTable('sub_sections', {
     isActive: boolean('is_active').notNull().default(true) // true = active, false = inactive
 });
 
-export const UserTable = pgTable('users', {
+export const userTable = pgTable('users', {
     id: uuid('id').primaryKey().defaultRandom(),
     name: varchar('name', { length: 255 }).notNull(),
-    email: varchar('email').notNull(),
+    email: varchar('email', { length: 255 }).unique().notNull(),
     password: text('password').notNull(),
+    role: roleEnum('role').notNull().default('user'),
 });
