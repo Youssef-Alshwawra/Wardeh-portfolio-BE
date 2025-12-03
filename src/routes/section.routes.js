@@ -6,38 +6,63 @@ import {
     updateSection, 
     deleteSection 
 } from "../controllers/section.controller.js";
+import { authenticate, authorize } from "../middleware/auth.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { validateBody, validateParams } from "../middleware/validation.js";
 import { sectionSchema, updateSectionSchema, idSchema } from "../validations/section.validation.js";
 
 const router = Router();
 
-// @route GET /sections - Get all sections
+/**
+ * @route   GET /api/sections
+ * @desc    Get all sections
+ * @access  Public
+ */
 router.get('/', asyncHandler(getAllSections));
 
-// @route GET /sections/:id - Get section by ID
+/**
+ * @route   GET /api/sections/:id
+ * @desc    Get section by ID
+ * @access  Public
+ */
 router.get('/:id', 
     validateParams(idSchema),
     asyncHandler(getSectionById)
 );
 
-// @route POST /sections - Create new section
+/**
+ * @route   POST /api/sections
+ * @desc    Create new section
+ * @access  Private/Admin
+ */
 router.post('/', 
+    authenticate,
+    authorize(['admin']),
     validateBody(sectionSchema),
     asyncHandler(createSection)
 );
 
-// @route PUT /sections/:id - Update section
-router.put('/:id',
+/**
+ * @route   PUT /api/sections/:id
+ * @desc    Update section by ID
+ * @access  Private/Admin
+ */
+router.put('/:id', 
+    authenticate,
+    authorize(['admin']),
     validateParams(idSchema),
     validateBody(updateSectionSchema),
     asyncHandler(updateSection)
 );
 
-// @route DELETE /sections/:id - Delete section
-router.delete('/:id',
+/**
+ * @route   DELETE /api/sections/:id
+ * @desc    Delete section by ID
+ * @access  Private/Admin
+ */
+router.delete('/:id', 
+    authenticate,
+    authorize(['admin']),
     validateParams(idSchema),
     asyncHandler(deleteSection)
-);
-
-export default router;
+);export default router;
