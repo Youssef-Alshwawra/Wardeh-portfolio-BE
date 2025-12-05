@@ -1084,4 +1084,5 @@ Credentials (cookies) are supported.
 
 ## Support
 
-For issues or questions, contact: youssefalshwawra@example.com
+For issues or questions, contact: yousef.alshwawra@gmail.com
+
