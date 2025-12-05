@@ -12,6 +12,14 @@ export const roleEnum = pgEnum('roleEnum', [
     'user',
 ]);
 
+export const projectCategoryEnum = pgEnum('projectCategoryEnum', [
+    'ui_design',
+    'ux_research',
+    'web_development',
+    'mobile_development',
+    'other'
+]);
+
 export const sectionTable = pgTable('sections', {
     id: uuid('id').primaryKey().defaultRandom(),
     sectionType: sectionTypeEnum('section_type').notNull(),
@@ -52,4 +60,24 @@ export const faqTable = pgTable('faqs', {
     periods: text('periods', { mode: 'json' }),
     order: integer('order').notNull().default(0),
     isActive: boolean('is_active').notNull().default(true)
+});
+
+export const projectTable = pgTable('projects', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    title: varchar('title', { length: 255 }).notNull(),
+    slug: varchar('slug', { length: 255 }).unique().notNull(),
+    category: projectCategoryEnum('category').notNull(),
+    thumbnail: text('thumbnail').notNull(),
+    shortDescription: text('short_description').notNull(),
+    projectType: varchar('project_type', { length: 100 }),
+    myRole: varchar('my_role', { length: 100 }).notNull(),
+    timeline: varchar('timeline', { length: 50 }).notNull(),
+    toolsUsed: text('tools_used', { mode: 'json' }).notNull(),
+    images: text('images', { mode: 'json' }).notNull(),
+    fullDescription: text('full_description'),
+    projectUrl: varchar('project_url'),
+    githubUrl: varchar('github_url'),
+    order: integer('order').notNull().default(0),
+    isActive: boolean('is_active').notNull().default(true),
+    isFeatured: boolean('is_featured').notNull().default(false)
 });
