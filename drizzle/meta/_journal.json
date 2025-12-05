@@ -15,6 +15,13 @@
       "when": 1764801163725,
       "tag": "0001_glamorous_sentinels",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764950591665,
+      "tag": "0002_omniscient_lady_mastermind",
+      "breakpoints": true
     }
   ]
 }
