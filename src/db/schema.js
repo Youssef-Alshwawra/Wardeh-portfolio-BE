@@ -44,3 +44,12 @@ export const userTable = pgTable('users', {
     password: text('password').notNull(),
     role: roleEnum('role').notNull().default('user'),
 });
+
+export const faqTable = pgTable('faqs', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    question: text('question').notNull(),
+    answer: text('answer').notNull(),
+    periods: text('periods', { mode: 'json' }),
+    order: integer('order').notNull().default(0),
+    isActive: boolean('is_active').notNull().default(true)
+});
