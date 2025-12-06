@@ -1,0 +1,18 @@
+[build]
+  command = "npm install"
+  publish = "."
+  
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
+  
+[secrets_scanning]
+  # Ignore example files and documentation
+  omit_paths = ["example.env", "README.md", "API_DOCS.md"]
