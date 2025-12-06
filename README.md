@@ -228,4 +228,5 @@ Found a bug? Please open an issue on [GitHub Issues](https://github.com/Youssef-
 
 ## 📧 Support
 
-For support, email: youssefalshwawra@example.com
+For support, email: yousef.alshwawra@gmail.com
+
