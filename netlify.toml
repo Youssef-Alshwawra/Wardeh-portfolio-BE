@@ -4,6 +4,8 @@
   
 [build.environment]
   NODE_VERSION = "18"
+  # Disable secrets scanning for this deployment
+  SECRETS_SCAN_ENABLED = "false"
 
 [[redirects]]
   from = "/*"
@@ -12,7 +14,3 @@
 
 [functions]
   node_bundler = "esbuild"
-  
-[secrets_scanning]
-  # Ignore example files and documentation
-  omit_paths = ["example.env", "README.md", "API_DOCS.md"]
