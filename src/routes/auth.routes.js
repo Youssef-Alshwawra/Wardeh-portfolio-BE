@@ -46,9 +46,7 @@ router.get('/me',
  * @desc    Register new user
  * @access  Private/Admin
  */
-router.post('/register', 
-    authenticate,
-    authorize(['admin']),
+router.post('/register',
     validateBody(registerSchema),
     asyncHandler(register)
 );
