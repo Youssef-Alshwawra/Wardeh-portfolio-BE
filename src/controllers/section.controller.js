@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import { db } from "../config/db.js";
-import { sectionTable } from "../db/schema.js"
+import { sectionTable, subSectionTable } from "../db/schema.js"
 import { getAll, getById, create, updateById, deleteById } from "../utils/curdFactory.js";
-import { successResponse, errorResponse } from "../utils/responseHandler.js";
+import responseHandler from "../utils/responseHandler.js";
 
 export const getAllSections = getAll(sectionTable, 'sections');
 
@@ -17,10 +17,20 @@ export const getSectionByType = async (req, res) => {
         .limit(1);
     
     if (!section.length) {
-        return errorResponse(res, 'Section not found', 404);
+        return responseHandler(res, 404, false, 'Section not found');
     }
     
-    return successResponse(res, section[0]);
+    const subsections = await db.select()
+        .from(subSectionTable)
+        .where(eq(subSectionTable.sectionId, section[0].id))
+        .orderBy(subSectionTable.order);
+    
+    const result = {
+        ...section[0],
+        subsections
+    };
+    
+    return responseHandler(res, 200, true, 'Section found successfully', result);
 };
 
 export const createSection = create(sectionTable, 'section');
