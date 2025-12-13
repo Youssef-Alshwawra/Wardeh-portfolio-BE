@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db } from "../config/db.js";
+import db from "../config/db.js";
 import { sectionTable, subSectionTable } from "../db/schema.js"
 import { getAll, getById, create, updateById, deleteById } from "../utils/curdFactory.js";
 import responseHandler from "../utils/responseHandler.js";
