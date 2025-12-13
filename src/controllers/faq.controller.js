@@ -31,3 +31,23 @@ export const getActiveFaqs = async (req, res) => {
         return responseHandler(res, 500, false, 'Failed to fetch active FAQs');
     }
 };
+
+export const getFaqsByPeriod = async (req, res) => {
+    try {
+        const { period } = req.params;
+        
+        const faqs = await db.select()
+            .from(faqTable)
+            .where(eq(faqTable.period, period))
+            .orderBy(faqTable.order);
+        
+        if (faqs.length === 0) {
+            return responseHandler(res, 200, false, `No FAQs found for period: ${period}`, []);
+        }
+        
+        return responseHandler(res, 200, true, 'FAQs found successfully', faqs);
+    } catch (error) {
+        console.error('Error fetching FAQs by period:', error);
+        return responseHandler(res, 500, false, 'Failed to fetch FAQs');
+    }
+};

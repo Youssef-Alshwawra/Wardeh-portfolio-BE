@@ -5,11 +5,12 @@ import {
     createFaq, 
     updateFaq, 
     deleteFaq,
-    getActiveFaqs
+    getActiveFaqs,
+    getFaqsByPeriod
 } from '../controllers/faq.controller.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import { validateBody, validateParams } from '../middleware/validation.js';
-import { faqSchema, updateFaqSchema, faqIdSchema } from '../validations/faq.validation.js';
+import { faqSchema, updateFaqSchema, faqIdSchema, faqPeriodSchema } from '../validations/faq.validation.js';
 import asyncHandler from '../utils/asyncHandler.js';
 
 const router = express.Router();
@@ -27,6 +28,16 @@ router.get('/', asyncHandler(getAllFaqs));
  * @access  Public
  */
 router.get('/active', asyncHandler(getActiveFaqs));
+
+/**
+ * @route   GET /api/faqs/period/:period
+ * @desc    Get FAQs by period
+ * @access  Public
+ */
+router.get('/period/:period', 
+    validateParams(faqPeriodSchema),
+    asyncHandler(getFaqsByPeriod)
+);
 
 /**
  * @route   GET /api/faqs/:id
