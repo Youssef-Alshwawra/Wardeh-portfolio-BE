@@ -37,3 +37,7 @@ export const idSchema = z.object({
         .regex(/^\d+$/, 'Invalid ID format')
         .transform(Number)
 });
+
+export const sectionTypeSchema = z.object({
+    sectionType: z.enum(['hero', 'about', 'services', 'tools'])
+});

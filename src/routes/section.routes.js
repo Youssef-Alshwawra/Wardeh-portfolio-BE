@@ -2,6 +2,7 @@ import { Router } from "express";
 import { 
     getAllSections, 
     getSectionById, 
+    getSectionByType,
     createSection, 
     updateSection, 
     deleteSection 
@@ -9,7 +10,7 @@ import {
 import { authenticate, authorize } from "../middleware/auth.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { validateBody, validateParams } from "../middleware/validation.js";
-import { sectionSchema, updateSectionSchema, idSchema } from "../validations/section.validation.js";
+import { sectionSchema, updateSectionSchema, idSchema, sectionTypeSchema } from "../validations/section.validation.js";
 
 const router = Router();
 
@@ -19,6 +20,16 @@ const router = Router();
  * @access  Public
  */
 router.get('/', asyncHandler(getAllSections));
+
+/**
+ * @route   GET /api/sections/type/:sectionType
+ * @desc    Get section by type
+ * @access  Public
+ */
+router.get('/type/:sectionType', 
+    validateParams(sectionTypeSchema),
+    asyncHandler(getSectionByType)
+);
 
 /**
  * @route   GET /api/sections/:id
