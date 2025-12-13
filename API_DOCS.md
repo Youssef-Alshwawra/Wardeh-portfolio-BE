@@ -13,6 +13,7 @@ Production: https://api.yourdomain.com
 - [Sections](#sections)
 - [SubSections](#subsections)
 - [FAQs](#faqs)
+- [Periods](#periods)
 - [Projects](#projects)
 - [Error Handling](#error-handling)
 
@@ -206,6 +207,57 @@ Retrieve all portfolio sections.
       "updatedAt": "2025-01-15T10:00:00Z"
     }
   ]
+}
+```
+
+---
+
+### Get Section By Type
+Retrieve a section by its type including all subsections.
+
+**Endpoint:** `GET /api/sections/type/:sectionType`
+
+**Access:** Public
+
+**Parameters:**
+- `sectionType`: `hero`, `about`, `services`, or `tools`
+
+**Response:** `200 OK`
+```json
+{
+  "success": true,
+  "message": "Section found successfully",
+  "data": {
+    "id": "uuid-here",
+    "title": "About Me",
+    "subtitle": "Get to know me",
+    "description": "I'm a passionate developer...",
+    "sectionType": "about",
+    "order": 1,
+    "isActive": true,
+    "subsections": [
+      {
+        "id": "subsection-uuid-1",
+        "sectionId": "uuid-here",
+        "title": "My Background",
+        "description": "...",
+        "icon": "https://example.com/icon.png",
+        "backgroundColor": "#10B981",
+        "buttonText": "Learn More",
+        "buttonLink": "/about",
+        "order": 1,
+        "isActive": true
+      },
+      {
+        "id": "subsection-uuid-2",
+        "sectionId": "uuid-here",
+        "title": "My Skills",
+        "description": "...",
+        "order": 2,
+        "isActive": true
+      }
+    ]
+  }
 }
 ```
 
@@ -560,12 +612,6 @@ Retrieve all frequently asked questions.
       "id": "uuid-here",
       "question": "What services do you offer?",
       "answer": "I offer UI/UX design, web development...",
-      "periods": [
-        {
-          "period": "2023-2024",
-          "details": "Focused on React and Node.js"
-        }
-      ],
       "order": 1,
       "isActive": true,
       "createdAt": "2025-01-15T10:00:00Z",
@@ -577,31 +623,25 @@ Retrieve all frequently asked questions.
 
 ---
 
-### Get FAQs By Period
-Filter FAQs by specific period.
+### Get Active FAQs
+Retrieve only active FAQs.
 
-**Endpoint:** `GET /api/faqs/period/:period`
+**Endpoint:** `GET /api/faqs/active`
 
 **Access:** Public
-
-**Parameters:**
-- `period` (string): Period identifier (e.g., "2023-2024")
 
 **Response:** `200 OK`
 ```json
 {
   "success": true,
+  "message": "Active FAQs found successfully",
   "data": [
     {
       "id": "uuid-here",
       "question": "What technologies do you use?",
       "answer": "React, Node.js, PostgreSQL...",
-      "periods": [
-        {
-          "period": "2023-2024",
-          "details": "Current tech stack"
-        }
-      ]
+      "order": 1,
+      "isActive": true
     }
   ]
 }
@@ -620,6 +660,18 @@ Retrieve a specific FAQ.
 - `id` (UUID): FAQ ID
 
 **Response:** `200 OK`
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid-here",
+    "question": "How do you approach projects?",
+    "answer": "I follow a user-centered design process...",
+    "order": 2,
+    "isActive": true
+  }
+}
+```
 
 ---
 
@@ -641,25 +693,31 @@ Content-Type: application/json
 {
   "question": "How long does a project take?",
   "answer": "Typically 4-8 weeks depending on complexity...",
-  "periods": [
-    {
-      "period": "2024-Present",
-      "details": "Average timeline for current projects"
-    }
-  ],
   "order": 5,
   "isActive": true
 }
 ```
 
 **Validation:**
-- `question`: 10-500 characters (required)
+- `question`: 5-500 characters (required)
 - `answer`: 10-2000 characters (required)
-- `periods`: Array of objects with `period` and `details` (optional)
-- `order`: Integer (optional)
-- `isActive`: Boolean (optional)
+- `order`: Integer (optional, default: 0)
+- `isActive`: Boolean (optional, default: true)
 
 **Response:** `201 Created`
+```json
+{
+  "success": true,
+  "message": "FAQ created successfully",
+  "data": {
+    "id": "uuid-here",
+    "question": "How long does a project take?",
+    "answer": "Typically 4-8 weeks...",
+    "order": 5,
+    "isActive": true
+  }
+}
+```
 
 ---
 
@@ -670,7 +728,22 @@ Update an existing FAQ.
 
 **Access:** Private/Admin
 
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+```
+
+**Parameters:**
+- `id` (UUID): FAQ ID
+
 **Request Body:** (All fields optional)
+```json
+{
+  "question": "Updated question?",
+  "isActive": false
+}
+```
 
 **Response:** `200 OK`
 
@@ -683,7 +756,242 @@ Delete an FAQ.
 
 **Access:** Private/Admin
 
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+**Parameters:**
+- `id` (UUID): FAQ ID
+
 **Response:** `200 OK`
+```json
+{
+  "success": true,
+  "message": "FAQ deleted successfully"
+}
+```
+
+---
+
+## Periods
+
+Periods represent work experiences or timeline entries associated with FAQs (e.g., company, position, dates).
+
+### Get All Periods
+Retrieve all periods.
+
+**Endpoint:** `GET /api/periods`
+
+**Access:** Public
+
+**Response:** `200 OK`
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid-here",
+      "faqId": "faq-uuid",
+      "company": "Google",
+      "position": "Senior UX Designer",
+      "startDate": "2020-01",
+      "endDate": "Present",
+      "description": "Leading design initiatives for core products...",
+      "order": 1
+    }
+  ]
+}
+```
+
+---
+
+### Get Periods By FAQ
+Retrieve all periods for a specific FAQ.
+
+**Endpoint:** `GET /api/periods/faq/:faqId`
+
+**Access:** Public
+
+**Parameters:**
+- `faqId` (UUID): FAQ ID
+
+**Response:** `200 OK`
+```json
+{
+  "success": true,
+  "message": "Periods found successfully",
+  "data": [
+    {
+      "id": "period-uuid-1",
+      "faqId": "faq-uuid",
+      "company": "Meta",
+      "position": "UX Researcher",
+      "startDate": "2018-06",
+      "endDate": "2020-01",
+      "description": "Conducted user research for AR/VR experiences",
+      "order": 1
+    },
+    {
+      "id": "period-uuid-2",
+      "faqId": "faq-uuid",
+      "company": "Google",
+      "position": "Senior UX Designer",
+      "startDate": "2020-01",
+      "endDate": "Present",
+      "description": "Leading design initiatives",
+      "order": 2
+    }
+  ]
+}
+```
+
+---
+
+### Get Period By ID
+Retrieve a specific period.
+
+**Endpoint:** `GET /api/periods/:id`
+
+**Access:** Public
+
+**Parameters:**
+- `id` (UUID): Period ID
+
+**Response:** `200 OK`
+```json
+{
+  "success": true,
+  "data": {
+    "id": "uuid-here",
+    "faqId": "faq-uuid",
+    "company": "Google",
+    "position": "Senior UX Designer",
+    "startDate": "2020-01",
+    "endDate": "Present",
+    "description": "Leading design initiatives...",
+    "order": 1
+  }
+}
+```
+
+---
+
+### Create Period
+Create a new period entry.
+
+**Endpoint:** `POST /api/periods`
+
+**Access:** Private/Admin
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "faqId": "faq-uuid-here",
+  "company": "Apple",
+  "position": "Lead Product Designer",
+  "startDate": "2022-03",
+  "endDate": "Present",
+  "description": "Designing next-generation user experiences for iOS",
+  "order": 1
+}
+```
+
+**Validation:**
+- `faqId`: Valid UUID (required)
+- `company`: 2-100 characters (required)
+- `position`: 2-100 characters (optional)
+- `startDate`: YYYY-MM format (required)
+- `endDate`: YYYY-MM format or "Present" (required)
+- `description`: Max 500 characters (optional)
+- `order`: Integer (optional, default: 0)
+
+**Response:** `201 Created`
+```json
+{
+  "success": true,
+  "message": "Period created successfully",
+  "data": {
+    "id": "uuid-here",
+    "faqId": "faq-uuid-here",
+    "company": "Apple",
+    "position": "Lead Product Designer",
+    "startDate": "2022-03",
+    "endDate": "Present",
+    "order": 1
+  }
+}
+```
+
+---
+
+### Update Period
+Update an existing period.
+
+**Endpoint:** `PUT /api/periods/:id`
+
+**Access:** Private/Admin
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+```
+
+**Parameters:**
+- `id` (UUID): Period ID
+
+**Request Body:** (All fields optional)
+```json
+{
+  "endDate": "2024-12",
+  "description": "Updated description"
+}
+```
+
+**Response:** `200 OK`
+```json
+{
+  "success": true,
+  "message": "Period updated successfully",
+  "data": {
+    "id": "uuid-here",
+    "endDate": "2024-12",
+    "description": "Updated description"
+  }
+}
+```
+
+---
+
+### Delete Period
+Delete a period entry.
+
+**Endpoint:** `DELETE /api/periods/:id`
+
+**Access:** Private/Admin
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+**Parameters:**
+- `id` (UUID): Period ID
+
+**Response:** `200 OK`
+```json
+{
+  "success": true,
+  "message": "Period deleted successfully"
+}
+```
 
 ---
 

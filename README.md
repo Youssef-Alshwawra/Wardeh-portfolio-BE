@@ -78,6 +78,7 @@ Server will run on `http://localhost:5000`
 
 ### Sections
 - `GET /api/sections` - Get all sections
+- `GET /api/sections/type/:sectionType` - Get section by type (includes subsections)
 - `GET /api/sections/:id` - Get section by ID
 - `POST /api/sections` - Create section (Admin only)
 - `PUT /api/sections/:id` - Update section (Admin only)
@@ -93,11 +94,19 @@ Server will run on `http://localhost:5000`
 
 ### FAQs
 - `GET /api/faqs` - Get all FAQs
-- `GET /api/faqs/period/:period` - Get FAQs by period
+- `GET /api/faqs/active` - Get active FAQs only
 - `GET /api/faqs/:id` - Get FAQ by ID
 - `POST /api/faqs` - Create FAQ (Admin only)
 - `PUT /api/faqs/:id` - Update FAQ (Admin only)
 - `DELETE /api/faqs/:id` - Delete FAQ (Admin only)
+
+### Periods (Work Experience Timeline)
+- `GET /api/periods` - Get all periods
+- `GET /api/periods/faq/:faqId` - Get periods by FAQ
+- `GET /api/periods/:id` - Get period by ID
+- `POST /api/periods` - Create period (Admin only)
+- `PUT /api/periods/:id` - Update period (Admin only)
+- `DELETE /api/periods/:id` - Delete period (Admin only)
 
 ### Projects
 - `GET /api/projects` - Get all projects
@@ -135,16 +144,21 @@ For detailed API documentation including request/response examples, see [API_DOC
 ## 🗄️ Database Schema
 
 ### Tables
-- **sections**: Portfolio sections (About, Experience, Skills, etc.)
-- **sub_sections**: Nested content within sections
-- **faqs**: Frequently asked questions with timeline periods
+- **sections**: Portfolio sections (Hero, About, Services, Tools)
+- **sub_sections**: Nested content within sections (with icons, buttons, colors)
+- **faqs**: Frequently asked questions
+- **periods**: Work experience timeline (company, position, dates) linked to FAQs
 - **projects**: Portfolio projects with categories and metadata
 - **users**: System users with role-based access
 
 ### Enums
-- **sectionType**: `hero`, `about`, `experience`, `skills`, `contact`
+- **sectionType**: `hero`, `about`, `services`, `tools`
 - **role**: `admin`, `user`
-- **projectCategory**: `ui_design`, `ux_research`, `web_development`
+- **projectCategory**: `ui_design`, `ux_research`, `web_development`, `mobile_development`, `other`
+
+### Relationships
+- **sub_sections** → **sections** (many-to-one, cascade delete)
+- **periods** → **faqs** (many-to-one, cascade delete)
 
 ## 🧪 Available Scripts
 
@@ -170,9 +184,10 @@ src/
 │   ├── section.controller.js
 │   ├── subsection.controller.js
 │   ├── faq.controller.js
+│   ├── period.controller.js
 │   └── project.controller.js
 ├── db/
-│   └── schema.js         # Drizzle schema
+│   └── schema.js         # Drizzle schema (6 tables)
 ├── middleware/
 │   ├── auth.js           # Authentication & authorization
 │   ├── validation.js     # Zod validation
@@ -183,6 +198,7 @@ src/
 │   ├── section.routes.js
 │   ├── subsection.routes.js
 │   ├── faq.routes.js
+│   ├── period.routes.js
 │   └── project.routes.js
 ├── utils/
 │   ├── asyncHandler.js   # Async error wrapper
@@ -191,6 +207,10 @@ src/
 └── validations/
     ├── auth.validation.js
     ├── section.validation.js
+    ├── subsection.validation.js
+    ├── faq.validation.js
+    ├── period.validation.js
+    └── project.validation.js
     ├── subsection.validation.js
     ├── faq.validation.js
     └── project.validation.js
