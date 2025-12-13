@@ -4,6 +4,7 @@ import subsectionRoutes from './subsection.routes.js';
 import authRoutes from './auth.routes.js';
 import faqRoutes from './faq.routes.js';
 import projectRoutes from './project.routes.js';
+import periodRoutes from './period.routes.js';
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use('/api/sections', sectionRoutes);
 router.use('/api/subsections', subsectionRoutes);
 router.use('/api/faqs', faqRoutes);
 router.use('/api/projects', projectRoutes);
+router.use('/api/periods', periodRoutes);
 
 export default router;

@@ -57,9 +57,19 @@ export const faqTable = pgTable('faqs', {
     id: uuid('id').primaryKey().defaultRandom(),
     question: text('question').notNull(),
     answer: text('answer').notNull(),
-    periods: text('periods', { mode: 'json' }),
     order: integer('order').notNull().default(0),
     isActive: boolean('is_active').notNull().default(true)
+});
+
+export const periodTable = pgTable('periods', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    faqId: uuid('faq_id').notNull().references(() => faqTable.id, { onDelete: 'cascade' }),
+    company: varchar('company', { length: 100 }).notNull(),
+    position: varchar('position', { length: 100 }),
+    startDate: varchar('start_date', { length: 7 }).notNull(),
+    endDate: varchar('end_date', { length: 7 }).notNull(),
+    description: text('description'),
+    order: integer('order').notNull().default(0)
 });
 
 export const projectTable = pgTable('projects', {
