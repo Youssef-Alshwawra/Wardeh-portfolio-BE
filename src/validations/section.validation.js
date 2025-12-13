@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 export const sectionSchema = z.object({
-    section_type: z.string()
-        .min(1, 'Section type is required')
-        .max(50, 'Section type too long'),
+    sectionType: z.enum(['hero', 'about', 'services', 'tools'], {
+        errorMap: () => ({ message: 'Section type must be: hero, about, services, or tools' })
+    }),
     
     title: z.string()
         .min(1, 'Title is required')
@@ -22,11 +22,13 @@ export const sectionSchema = z.object({
         .min(0, 'Order must be positive')
         .optional(),
     
-    is_active: z.boolean()
-        .default(true)
+    isActive: z.union([z.boolean(), z.number().int().min(0).max(1)])
+        .transform(val => typeof val === 'boolean' ? (val ? 1 : 0) : val)
+        .default(1)
         .optional(),
     
-    images: z.array(z.string().url('Invalid image URL'))
+    image: z.string()
+        .url('Invalid image URL')
         .optional()
 });
 
